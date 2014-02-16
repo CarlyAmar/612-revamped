@@ -5,6 +5,7 @@
 
 #include "SmoothJoystick.h"
 #include "Drivetrain.h"
+#include "Shooter.h"
 #include "UpdateRegistry.h"
 
 class robot_class : public IterativeRobot
@@ -34,6 +35,7 @@ public:
     SmoothJoystick* gunnerJoy;
     
     Drivetrain* driveT;
+    Shooter* shoot;
     
     UpdateRegistry updateRegistry;
 private:
