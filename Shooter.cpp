@@ -16,7 +16,11 @@ void Shooter::toggleClamp()
 }
 void Shooter::grab(double power)
 {
-    grabber -> Set(power);
+    grabber -> Set(-power);
+}
+void Shooter::repel(double power)
+{
+    grabber->Set(power);
 }
 void Shooter::engageClutch()
 {
@@ -28,9 +32,13 @@ void Shooter::disengageClutch()
 }
 void Shooter::energize(float speed)
 {
-    if (speed > 0.1 || speed < -0.1)
+    if (speed > 0.1)
     {
         wormdrive->Set(1.0);
+    }
+    else if (speed < -0.1)
+    {
+        wormdrive->Set(-1.0);
     }
     else
     {

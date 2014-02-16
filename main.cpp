@@ -63,10 +63,18 @@ void robot_class::TeleopPeriodic()
     }
     //gunner
     shoot->move(gunnerJoy->GetRawAxis(2)); //move tilt based on left stick
-    shoot->energize(gunnerJoy->GetRawAxis(2)); //move launcher on left stick
+    shoot->energize(gunnerJoy->GetRawAxis(5)); //move launcher on right stick
     if (gunnerJoy->Joystick::GetRawButton(1))//press X to grab
     {
         shoot->grab(1.0);
+    }
+    else if (gunnerJoy->Joystick::GetRawButton(3))
+    {
+        shoot->repel(1.0);
+    }
+    else if (gunnerJoy->Joystick::GetRawButton(1))
+    {
+        shoot->grab(-1.0);
     }
     else
     {

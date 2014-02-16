@@ -12,6 +12,7 @@ public:
     Shooter();
     void toggleClamp();
     void grab(double power);
+    void repel(double power);
     void engageClutch();
     void disengageClutch();
     void energize(float speed);
