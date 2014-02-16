@@ -29,7 +29,7 @@ void Drivetrain::drive()
 void Drivetrain::pressurize()
 {
     
-    if (air->Get() == 1)
+    if (air->Get() == 0)
     {
         compressor->Set(Relay::kOn);
     }
