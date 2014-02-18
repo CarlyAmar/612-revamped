@@ -9,6 +9,7 @@ Shooter::Shooter()
     accel = new ADXL345_I2C(1);
     clutch = new DoubleSolenoid(1,3,4);
     clamp = new DoubleSolenoid(1,5,6);
+    infared = new AnalogChannel(1,1); //TODO fix ports
 }
 void Shooter::toggleClamp()
 {

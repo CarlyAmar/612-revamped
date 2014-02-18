@@ -5,6 +5,7 @@
 #include <DoubleSolenoid.h>
 #include <Talon.h>
 #include <ADXL345_I2C.h>
+#include <AnalogChannel.h>
 
 class Shooter
 {
@@ -23,6 +24,8 @@ public:
     
     DoubleSolenoid* clamp;
     DoubleSolenoid* clutch;
+    
+    AnalogChannel* infared;
     
     Talon* grabber;
     CANJaguar* tilt;

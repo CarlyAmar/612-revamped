@@ -46,6 +46,7 @@ void robot_class::TeleopInit()
 
 void robot_class::TeleopPeriodic()
 {
+    double infaredDistance = (double)((robot->shoot->infared->GetVoltage())*18.777777777777777);
     updateRegistry.update();
     driveT -> pressurize();
     driveT -> drive();
@@ -99,6 +100,11 @@ void robot_class::TeleopPeriodic()
     else
     {
         shoot->clutch->Set(DoubleSolenoid::kForward);
+    }
+    static int count = 0;
+    if (count % 25 == 0)
+    {
+        std::printf("Infared: %f\n", infaredDistance);
     }
 }
 
