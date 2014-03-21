@@ -9,19 +9,37 @@ Shooter::Shooter()
     accel = new ADXL345_I2C(1);
     clutch = new DoubleSolenoid(1,3,4);
     clamp = new DoubleSolenoid(1,5,6);
-    infared = new AnalogChannel(1,1); //TODO fix ports
+    infared = new AnalogChannel(1,4); //TODO fix ports
+    position = UP;
 }
 void Shooter::toggleClamp()
 {
-    //TODO
+    if (position == UP)
+        clampDown();
+    else if (position == DOWN)
+        clampUp();
 }
-void Shooter::grab(double power)
+void Shooter::clampUp()
 {
-    grabber -> Set(-power);
+    clamp->Set(DoubleSolenoid::kReverse);
+    position = UP;
 }
-void Shooter::repel(double power)
+void Shooter::clampDown()
 {
-    grabber->Set(power);
+    clamp->Set(DoubleSolenoid::kForward)
+    position = DOWN;
+}
+void Shooter::grab()
+{
+    grabber -> Set(-1.0);
+}
+void Shooter::repel()
+{
+    grabber->Set(1.0);
+}
+void Shooter::stopRollers()
+{
+    grabber->Set(0.0);
 }
 void Shooter::engageClutch()
 {
@@ -75,14 +93,18 @@ void Shooter::move(float speed)
 {
     if (speed > 0.1)
     {
-        tilt->Set(speed);
+        tilt->Set(-POWER);
     }
     else if (speed < -0.1)
     {
-        tilt ->Set(speed);
+        tilt ->Set(POWER);
     }
     else
     {
         tilt->Set(0.0);
     }
+}
+void Shooter::energize()
+{
+    clutch->Set(DoubleSolenoid::kForward);
 }
