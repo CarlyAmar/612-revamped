@@ -33,12 +33,12 @@ void robot_class::DisabledPeriodic()
 
 void robot_class::AutonomousInit()
 {
-
+    driveT->shifter->Set(DoubleSolenoid::kForward);
 }
 
 void robot_class::AutonomousPeriodic()
 {
-
+    driveT->autoDrive(1200);
 }
 
 void robot_class::TeleopInit()
@@ -118,13 +118,18 @@ void robot_class::doControls()
     //worm drive positive FULL
     
     /* FIRING */
-    if (gunnerJoy->GetRawButton(BUTTON_X))
+    if (gunnerJoy->Joystick::GetRawButton(BUTTON_X))
         shoot->fire();
     
     /* PRESETS */
-    if (gunnerJoy->GetRawButton(BUTTON_L1)
-        shoot->autoTilt(30.0); //TODO get real presets
-    //TODO repeat here
+    if (gunnerJoy->Joystick::GetRawButton(BUTTON_L1))//LOW GOAL
+        shoot->autoTilt(49.0); //TODO get real presets
+    if (gunnerJoy->Joystick::GetRawButton(BUTTON_R1))//HIGH GOAL
+        shoot->autoTilt(37.0);
+    if (gunnerJoy->GetTriggerState() == TRIG_L)//PICKUP
+        shoot->autoTilt(-25.0);
+    else if (gunnerJoy->GetTriggerState() == TRIG_R)//VERTICAL
+        shoot->autoTilt(81.89);
 }
 
 START_ROBOT_CLASS(robot_class)

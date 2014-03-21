@@ -13,7 +13,7 @@ Drivetrain::Drivetrain() : RobotDrive(new Talon(1,4),new Talon(1,3),new Talon(1,
     compressor = new Relay(1,8);
     air = new DigitalInput(1,8);
     shifter = new DoubleSolenoid(1,7,8);
-    leftEncoder = new Encoder(1,2,3,4); //TODO ports
+    leftEncoder = new Encoder(1,5,1,6); 
     leftEncoder->SetDistancePerPulse(1.0);//TODO GET THIS SHIT DONE
     firstDrive = true;
 }
@@ -48,16 +48,23 @@ bool Drivetrain::autoDrive(double inches)//84 inches
         leftEncoder->Start();
         firstDrive = false;
     }
-    if (leftEncoder->GetDistance() >= inches)
+    if (((double)leftEncoder->Get()*-1.0) >= inches)
     {
+        /*
+        if (((double)leftEncoder->Get()*-1.0) >= inches)
+            std::printf("done driving\n");
+        if (((double)leftEncoder->Get()*-1.0) < 10.0)
+            std::printf("Went Backwards\n");
+        */
         TankDrive(0.0,0.0);
         return true;
     }
     else
     {
-        TankDrive(0.5,0.5);
+        TankDrive(-0.5,-0.5);
         return false;
     }
+    
 }
 /*
 void Drivetrain::shiftHigh()

@@ -1,6 +1,8 @@
 #include "Shooter.h"
 #include <cmath>
 
+const float Shooter::POWER = 0.6;
+
 Shooter::Shooter()
 {
     grabber = new Talon(1,5);
@@ -9,27 +11,30 @@ Shooter::Shooter()
     accel = new ADXL345_I2C(1);
     clutch = new DoubleSolenoid(1,3,4);
     clamp = new DoubleSolenoid(1,5,6);
-    infared = new AnalogChannel(1,4); //TODO fix ports
-    position = UP;
+    infared = new AnalogChannel(1,5);
+//     position = CLAMP_UP;
     accel = new ADXL345_I2C(1);
     firstCall = true;
 }
 void Shooter::toggleClamp()
 {
+    /*
     if (position == UP)
         clampDown();
     else if (position == DOWN)
         clampUp();
+    
+    */
 }
 void Shooter::clampUp()
 {
     clamp->Set(DoubleSolenoid::kReverse);
-    position = UP;
+    position = CLAMP_UP;
 }
 void Shooter::clampDown()
 {
     clamp->Set(DoubleSolenoid::kForward);
-    position = DOWN;
+    position = CLAMP_DOWN;
 }
 void Shooter::grab()
 {
@@ -116,26 +121,49 @@ void Shooter::autoTilt(float angle)
 {
     if (firstCall)
     {
-        if (getPitch < angle)
+        if (getPitch() < angle)
+        {
             dir = UP;
-        else if (getPitch > angle)
+            std::printf("Pitch is less than angle\n");
+        }
+        else if (getPitch() > angle)
+        {
             dir = DOWN;
+            std::printf("Pitch is greater than Angle\n");
+        }
     }
+//     static int count = 0;
     if (dir == UP)
     {
         if (getPitch() < angle)
         {
             tilt->Set(0.5);
+//             if (count % 10 == 0)
+//                 std::printf("Less than angle, moving positive\n"
         }
         else 
+        {
             tilt->Set(0.0);
+//             if (count % 10 == 0)
+//                 std::printf("Done moving positive!\n");
+        }
+//         count++;
     }
     else if (dir == DOWN)
     {
         if (getPitch() > angle)
+        {
             tilt->Set(-0.5);
+//             if (count % 10 == 0)
+//                 std::printf("Greater than angle, moving negative\n");
+        }
         else
+        {
             tilt->Set(0.0);
+//             if (count % 10 == 0)
+//                 std::printf("Done moving negative!\n");
+        }
+//         count++;
     }
 }
 double Shooter::getPitch()

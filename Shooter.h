@@ -9,10 +9,12 @@
 
 class Shooter
 {
+
 enum clampPos{
-    UP,
-    DOWN
+    CLAMP_UP,
+    CLAMP_DOWN
 };
+
 enum direction{
     UP,
     DOWN
@@ -32,9 +34,10 @@ public:
     void move(float speed);
     void clampUp();
     void clampDown();
-    void autoTilt();
+    void autoTilt(float);
+    double getPitch();
     
-    static const float POWER = 0.6;
+    static const float POWER;
     bool firstCall;
 
     clampPos position;
@@ -49,7 +52,6 @@ public:
     Talon* grabber;
     CANJaguar* tilt;
     CANJaguar* wormdrive;
-    ADXL345_I2C* accel;
 };
 
 #endif
