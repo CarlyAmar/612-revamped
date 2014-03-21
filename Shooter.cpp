@@ -11,6 +11,8 @@ Shooter::Shooter()
     clamp = new DoubleSolenoid(1,5,6);
     infared = new AnalogChannel(1,4); //TODO fix ports
     position = UP;
+    accel = new ADXL345_I2C(1);
+    firstCall = true;
 }
 void Shooter::toggleClamp()
 {
@@ -26,7 +28,7 @@ void Shooter::clampUp()
 }
 void Shooter::clampDown()
 {
-    clamp->Set(DoubleSolenoid::kForward)
+    clamp->Set(DoubleSolenoid::kForward);
     position = DOWN;
 }
 void Shooter::grab()
@@ -66,7 +68,8 @@ void Shooter::energize(float speed)
 }
 void Shooter::fire()
 {
-    disengageClutch();
+    clutch->Set(DoubleSolenoid::kReverse);
+    wormdrive->Set(0.0);
 }
 void Shooter::move(float angle, float speed)
 {
@@ -107,4 +110,41 @@ void Shooter::move(float speed)
 void Shooter::energize()
 {
     clutch->Set(DoubleSolenoid::kForward);
+    wormdrive->Set(1.0);
+}
+void Shooter::autoTilt(float angle)
+{
+    if (firstCall)
+    {
+        if (getPitch < angle)
+            dir = UP;
+        else if (getPitch > angle)
+            dir = DOWN;
+    }
+    if (dir == UP)
+    {
+        if (getPitch() < angle)
+        {
+            tilt->Set(0.5);
+        }
+        else 
+            tilt->Set(0.0);
+    }
+    else if (dir == DOWN)
+    {
+        if (getPitch() > angle)
+            tilt->Set(-0.5);
+        else
+            tilt->Set(0.0);
+    }
+}
+double Shooter::getPitch()
+{
+    double xAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_X);
+    double yAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Y);
+    double zAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Z);
+    
+    //double roll = atan(-yAxis/zAxis)*(180/3.141592654);
+    double pitch = atan(xAxis/(sqrt((yAxis*yAxis) + (zAxis*zAxis))))*(180/3.141592654);
+    return pitch;
 }

@@ -92,6 +92,8 @@ void robot_class::doControls()
      * tilt left stick (inverted)
      * rollers right (up == in)
      */
+    
+    /* ROLLERS */
     if (gunnerJoy->GetRawAxis(RIGHT_JOYSTICK_Y) > 0.1) // Grabbing with right stick
         shoot->repel();
     else if (gunnerJoy->GetRawAxis(RIGHT_JOYSTICK_Y) < -0.1)
@@ -101,6 +103,7 @@ void robot_class::doControls()
     
     shoot->move(gunnerJoy->GetRawAxis(LEFT_JOYSTICK_Y)); //Tilting
     
+    /* CLAMP */
     if (gunnerJoy->Joystick::GetRawButton(BUTTON_Y))//Adjust clamp with Y and B
         shoot->clampUp();
     else if (gunnerJoy->Joystick::GetRawButton(BUTTON_A))//B
@@ -108,11 +111,20 @@ void robot_class::doControls()
     else
         shoot->clamp->Set(DoubleSolenoid::kOff);
     
-    if (gunnerJoy->Joystick::GetRawButton(BUTTON_R1))//R1 //Down is kForward
-        shoot->clutch->Set(DoubleSolenoid::kReverse);
-    else
-        shoot->clutch->Set(DoubleSolenoid::kForward);
+    /* ENERGIZING */
+    if (gunnerJoy->Joystick::GetRawButton(BUTTON_B))//R1 //Down is kForward
+        shoot->energize();
+    
     //worm drive positive FULL
+    
+    /* FIRING */
+    if (gunnerJoy->GetRawButton(BUTTON_X))
+        shoot->fire();
+    
+    /* PRESETS */
+    if (gunnerJoy->GetRawButton(BUTTON_L1)
+        shoot->autoTilt(30.0); //TODO get real presets
+    //TODO repeat here
 }
 
 START_ROBOT_CLASS(robot_class)

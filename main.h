@@ -30,6 +30,8 @@ public:
     void init_vision();
     void stop_vision();
     
+    void doControls();
+    
     //DerekDrive* test_drivetrain;
     SmoothJoystick* driverJoy;
     SmoothJoystick* gunnerJoy;

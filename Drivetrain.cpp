@@ -13,6 +13,9 @@ Drivetrain::Drivetrain() : RobotDrive(new Talon(1,4),new Talon(1,3),new Talon(1,
     compressor = new Relay(1,8);
     air = new DigitalInput(1,8);
     shifter = new DoubleSolenoid(1,7,8);
+    leftEncoder = new Encoder(1,2,3,4); //TODO ports
+    leftEncoder->SetDistancePerPulse(1.0);//TODO GET THIS SHIT DONE
+    firstDrive = true;
 }
 
 void Drivetrain::drive()
@@ -36,6 +39,24 @@ void Drivetrain::pressurize()
     else
     {
         compressor->Set(Relay::kOff);
+    }
+}
+bool Drivetrain::autoDrive(double inches)//84 inches
+{
+    if (firstDrive)
+    {
+        leftEncoder->Start();
+        firstDrive = false;
+    }
+    if (leftEncoder->GetDistance() >= inches)
+    {
+        TankDrive(0.0,0.0);
+        return true;
+    }
+    else
+    {
+        TankDrive(0.5,0.5);
+        return false;
     }
 }
 /*
