@@ -14,7 +14,7 @@ Shooter::Shooter()
     infared = new AnalogChannel(1,5);
 //     position = CLAMP_UP;
     accel = new ADXL345_I2C(1);
-    firstCall = true;
+    angle = getPitch();
 }
 void Shooter::toggleClamp()
 {
@@ -76,13 +76,17 @@ void Shooter::fire()
     clutch->Set(DoubleSolenoid::kReverse);
     wormdrive->Set(0.0);
 }
-void Shooter::move(float angle, float speed)
+//NOT USED
+void Shooter::move(float angle, float speed=0.6)
 {
-    double xAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_X);
-    double yAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Y);
-    double zAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Z);
+    double pitch;
+    {
+        double xAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_X);
+        double yAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Y);
+        double zAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Z);
+        pitch = atan(yAxis/(sqrt((xAxis*xAxis) + (zAxis*zAxis))))*(180/3.141592654);
+    }
     
-    double pitch = atan(yAxis/(sqrt((xAxis*xAxis) + (zAxis*zAxis))))*(180/3.141592654);
     //TODO make this better with tolorances
     if (pitch < angle)
     {
@@ -117,54 +121,67 @@ void Shooter::energize()
     clutch->Set(DoubleSolenoid::kForward);
     wormdrive->Set(1.0);
 }
-void Shooter::autoTilt(float angle)
+void Shooter::disable()
 {
-    if (firstCall)
+    wormdrive->Set(0.0);
+}
+void Shooter::initAutoTilt(float a)
+{
+    angle = a;
+    done = false;
+    double pitch = getPitch();
+    if (pitch < angle)
     {
-        if (getPitch() < angle)
-        {
-            dir = UP;
-            std::printf("Pitch is less than angle\n");
-        }
-        else if (getPitch() > angle)
-        {
-            dir = DOWN;
-            std::printf("Pitch is greater than Angle\n");
-        }
+        dir = UP;
+        std::printf("Pitch is less than angle\n");
     }
+    else if (pitch > angle)
+    {
+        dir = DOWN;
+        std::printf("Pitch is greater than Angle\n");
+    }
+}
+bool Shooter::autoTilt()
+{
 //     static int count = 0;
-    if (dir == UP)
+    if (!done)
     {
-        if (getPitch() < angle)
+        if (dir == UP)
         {
-            tilt->Set(0.5);
-//             if (count % 10 == 0)
-//                 std::printf("Less than angle, moving positive\n"
+            if (getPitch() < angle)
+            {
+                tilt->Set(0.5);
+    //             if (count % 10 == 0)
+    //                 std::printf("Less than angle, moving positive\n"
+            }
+            else 
+            {
+                tilt->Set(0.0);
+    //             if (count % 10 == 0)
+    //                 std::printf("Done moving positive!\n");
+                done = true;
+            }
+    //         count++;
         }
-        else 
+        else if (dir == DOWN)
         {
-            tilt->Set(0.0);
-//             if (count % 10 == 0)
-//                 std::printf("Done moving positive!\n");
+            if (getPitch() > angle)
+            {
+                tilt->Set(-0.5);
+    //             if (count % 10 == 0)
+    //                 std::printf("Greater than angle, moving negative\n");
+            }
+            else
+            {
+                tilt->Set(0.0);
+    //             if (count % 10 == 0)
+    //                 std::printf("Done moving negative!\n");
+                done = true;
+            }
+    //         count++;
         }
-//         count++;
     }
-    else if (dir == DOWN)
-    {
-        if (getPitch() > angle)
-        {
-            tilt->Set(-0.5);
-//             if (count % 10 == 0)
-//                 std::printf("Greater than angle, moving negative\n");
-        }
-        else
-        {
-            tilt->Set(0.0);
-//             if (count % 10 == 0)
-//                 std::printf("Done moving negative!\n");
-        }
-//         count++;
-    }
+    return done;
 }
 double Shooter::getPitch()
 {
@@ -172,7 +189,16 @@ double Shooter::getPitch()
     double yAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Y);
     double zAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Z);
     
-    //double roll = atan(-yAxis/zAxis)*(180/3.141592654);
     double pitch = atan(xAxis/(sqrt((yAxis*yAxis) + (zAxis*zAxis))))*(180/3.141592654);
+    
+    if (xAxis == 0.0 && yAxis == 0.0 && zAxis == 0.0)
+    {
+        ACworking = false;
+        done = true;
+    }
+    else
+    {
+        ACworking = true;
+    }
     return pitch;
 }

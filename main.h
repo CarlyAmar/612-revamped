@@ -48,6 +48,7 @@ private:
     bool shooting;
     bool turning;
     bool driving;
+    bool energized;
 };
 
 #endif // MAIN_H

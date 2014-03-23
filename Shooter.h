@@ -29,16 +29,19 @@ public:
     void disengageClutch();
     void energize(float speed);
     void energize();
+    void disable();
     void fire();
     void move(float angle, float speed);
     void move(float speed);
     void clampUp();
     void clampDown();
-    void autoTilt(float);
+    void initAutoTilt(float);
+    bool autoTilt();
     double getPitch();
-    
+    float angle;
     static const float POWER;
-    bool firstCall;
+    bool done;
+    bool ACworking;
 
     clampPos position;
     direction dir;

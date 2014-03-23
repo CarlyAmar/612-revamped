@@ -22,7 +22,8 @@ public:
     void pressurize();
     void shiftHigh();
     void shiftLow();
-    bool autoDrive(double inches);
+    void initAutoDrive();
+    bool autoDrive(double);
     Relay* compressor;
     DigitalInput* air;
     Encoder* leftEncoder;

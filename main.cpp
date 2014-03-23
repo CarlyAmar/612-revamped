@@ -34,11 +34,31 @@ void robot_class::DisabledPeriodic()
 void robot_class::AutonomousInit()
 {
     driveT->shifter->Set(DoubleSolenoid::kForward);
+    driveT->initAutoDrive();
+    shoot->initAutoTilt(53);
+    shoot->getPitch();
+    energized = false;
 }
 
 void robot_class::AutonomousPeriodic()
 {
-    driveT->autoDrive(1200);
+    driveT->pressurize();
+    driveT->autoDrive(2157.0);
+    if (shoot->ACworking = true)
+    {
+        shoot->autoTilt();
+        shoot->clampUp();
+        if (!energized)
+        {
+            shoot->energize();
+        }
+        if (driveT->autoDrive(2157.0) == true && shoot->autoTilt() == true)
+        {
+            energized = true;
+            shoot->disable();
+            shoot->fire();//FIRE FIRE CHOPPA
+        }
+    }
 }
 
 void robot_class::TeleopInit()
@@ -122,14 +142,15 @@ void robot_class::doControls()
         shoot->fire();
     
     /* PRESETS */
-    if (gunnerJoy->Joystick::GetRawButton(BUTTON_L1))//LOW GOAL
-        shoot->autoTilt(49.0); //TODO get real presets
-    if (gunnerJoy->Joystick::GetRawButton(BUTTON_R1))//HIGH GOAL
-        shoot->autoTilt(37.0);
-    if (gunnerJoy->GetTriggerState() == TRIG_L)//PICKUP
-        shoot->autoTilt(-25.0);
-    else if (gunnerJoy->GetTriggerState() == TRIG_R)//VERTICAL
-        shoot->autoTilt(81.89);
+    if (gunnerJoy->Joystick::GetRawButton(BUTTON_L1) && shoot->ACworking)//LOW GOAL
+        shoot->initAutoTilt(49.0); //TODO get real presets
+    if (gunnerJoy->Joystick::GetRawButton(BUTTON_R1) && shoot->ACworking)//HIGH GOAL
+        shoot->initAutoTilt(37.0);
+    if (gunnerJoy->GetTriggerState() == TRIG_L && shoot->ACworking)//PICKUP
+        shoot->initAutoTilt(-25.0);
+    else if (gunnerJoy->GetTriggerState() == TRIG_R && shoot->ACworking)//VERTICAL
+        shoot->initAutoTilt(81.89);
+    shoot->autoTilt();
 }
 
 START_ROBOT_CLASS(robot_class)

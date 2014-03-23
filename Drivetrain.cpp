@@ -41,13 +41,13 @@ void Drivetrain::pressurize()
         compressor->Set(Relay::kOff);
     }
 }
+void Drivetrain::initAutoDrive()
+{
+    leftEncoder->Reset();
+    leftEncoder->Start();
+}
 bool Drivetrain::autoDrive(double inches)//84 inches
 {
-    if (firstDrive)
-    {
-        leftEncoder->Start();
-        firstDrive = false;
-    }
     if (((double)leftEncoder->Get()*-1.0) >= inches)
     {
         /*
