@@ -21,6 +21,7 @@ void robot_class::RobotInit()
     driveT = new Drivetrain();
     shoot = new Shooter();
     shoot->clampDown();
+    std::printf("612-Revamped\n");
 }
 
 void robot_class::DisabledInit()
