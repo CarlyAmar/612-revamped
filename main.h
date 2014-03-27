@@ -21,6 +21,9 @@ public:
     void AutonomousInit();
     void AutonomousPeriodic();
 
+    void autoWithDrive();
+    void autoWithTilt();
+
     void TeleopInit();
     void TeleopPeriodic();
 

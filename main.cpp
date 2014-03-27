@@ -44,7 +44,7 @@ void robot_class::AutonomousInit()
 void robot_class::AutonomousPeriodic()
 {
     
-#define SHOOT
+#define MOVE
     
 #ifdef SHOOT
     autoWithTilt();
@@ -55,7 +55,7 @@ void robot_class::AutonomousPeriodic()
 }
 void robot_class::autoWithDrive()
 {
-    driveT->autoDrive(1200);
+    driveT->originalAutoDrive(1200);
 }
 void robot_class::autoWithTilt()
 {

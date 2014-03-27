@@ -24,6 +24,7 @@ public:
     void shiftLow();
     void initAutoDrive();
     bool autoDrive(double);
+    bool originalAutoDrive(double);
     Relay* compressor;
     DigitalInput* air;
     Encoder* leftEncoder;

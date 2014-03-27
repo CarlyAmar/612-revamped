@@ -46,6 +46,30 @@ void Drivetrain::initAutoDrive()
     leftEncoder->Reset();
     leftEncoder->Start();
 }
+bool Drivetrain::originalAutoDrive(double inches)//84 inches
+{
+    if (firstDrive)
+    {
+                leftEncoder->Start();
+                firstDrive = false;
+    }
+    if (((double)leftEncoder->Get()*-1.0) >= inches)
+    {
+        /*
+            *       if (((double)leftEncoder->Get()*-1.0) >= inches)
+            *           std::printf("done driving\n");
+        *       if (((double)leftEncoder->Get()*-1.0) < 10.0)
+        *           std::printf("Went Backwards\n");
+        */
+        TankDrive(0.0,0.0);
+        return true;
+    }
+    else
+    {
+        TankDrive(-0.5,-0.5);
+        return false;
+    }
+}
 bool Drivetrain::autoDrive(double inches)//84 inches
 {
     if (((double)leftEncoder->Get()*-1.0) >= inches)

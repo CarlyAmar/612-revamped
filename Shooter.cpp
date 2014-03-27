@@ -80,9 +80,9 @@ void Shooter::move(float angle, float speed=0.6)
 {
     double pitch;
     {
-        double xAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_X);
-        double yAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Y);
-        double zAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Z);
+        double xAxis = accel->GetAcceleration(ADXL345_I2C_612::kAxis_X);
+        double yAxis = accel->GetAcceleration(ADXL345_I2C_612::kAxis_Y);
+        double zAxis = accel->GetAcceleration(ADXL345_I2C_612::kAxis_Z);
         pitch = atan(yAxis/(sqrt((xAxis*xAxis) + (zAxis*zAxis))))*(180/3.141592654);
     }
     
@@ -184,9 +184,9 @@ bool Shooter::autoTilt()
 }
 double Shooter::getPitch()
 {
-    double xAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_X);
-    double yAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Y);
-    double zAxis = accel->GetAcceleration(ADXL345_I2C::kAxis_Z);
+    double xAxis = accel->GetAcceleration(ADXL345_I2C_612::kAxis_X);
+    double yAxis = accel->GetAcceleration(ADXL345_I2C_612::kAxis_Y);
+    double zAxis = accel->GetAcceleration(ADXL345_I2C_612::kAxis_Z);
     
     double pitch = atan(xAxis/(sqrt((yAxis*yAxis) + (zAxis*zAxis))))*(180/3.141592654);
     
