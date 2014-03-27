@@ -4,7 +4,7 @@
 #include <CANJaguar.h>
 #include <DoubleSolenoid.h>
 #include <Talon.h>
-#include <ADXL345_I2C.h>
+#include "ADXL345_I2C_612.h"
 #include <AnalogChannel.h>
 
 class Shooter
@@ -50,7 +50,7 @@ public:
     DoubleSolenoid* clutch;
     
     AnalogChannel* infared;
-    ADXL345_I2C* accel;
+    ADXL345_I2C_612* accel;
     
     Talon* grabber;
     CANJaguar* tilt;

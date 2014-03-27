@@ -43,6 +43,22 @@ void robot_class::AutonomousInit()
 
 void robot_class::AutonomousPeriodic()
 {
+    
+#define SHOOT
+    
+#ifdef SHOOT
+    autoWithTilt();
+#endif
+#ifdef MOVE
+    autoWithDrive();
+#endif
+}
+void robot_class::autoWithDrive()
+{
+    driveT->autoDrive(1200);
+}
+void robot_class::autoWithTilt()
+{
     driveT->pressurize();
     driveT->autoDrive(2157.0);
     if (shoot->ACworking = true)
@@ -61,7 +77,6 @@ void robot_class::AutonomousPeriodic()
         }
     }
 }
-
 void robot_class::TeleopInit()
 {
 

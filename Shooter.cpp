@@ -8,12 +8,11 @@ Shooter::Shooter()
     grabber = new Talon(1,5);
     tilt = new CANJaguar(1);
     wormdrive = new CANJaguar(2);
-    accel = new ADXL345_I2C(1);
     clutch = new DoubleSolenoid(1,3,4);
     clamp = new DoubleSolenoid(1,5,6);
     infared = new AnalogChannel(1,5);
 //     position = CLAMP_UP;
-    accel = new ADXL345_I2C(1);
+    accel = new ADXL345_I2C_612(1);
     angle = getPitch();
 }
 void Shooter::toggleClamp()
@@ -150,7 +149,7 @@ bool Shooter::autoTilt()
         {
             if (getPitch() < angle)
             {
-                tilt->Set(0.5);
+                tilt->Set(-0.5);
     //             if (count % 10 == 0)
     //                 std::printf("Less than angle, moving positive\n"
             }
@@ -167,7 +166,7 @@ bool Shooter::autoTilt()
         {
             if (getPitch() > angle)
             {
-                tilt->Set(-0.5);
+                tilt->Set(0.5);
     //             if (count % 10 == 0)
     //                 std::printf("Greater than angle, moving negative\n");
             }
